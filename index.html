@@ -476,7 +476,10 @@ body{font-family:'Microsoft JhengHei','微軟正黑體',Arial,sans-serif;backgro
     </div>
   </div>
   <div id="admin-dash" style="display:none">
-    <h2>⚙ Admin Dashboard</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h2 style="margin:0">⚙ Admin Dashboard</h2>
+      <button id="admin-close" type="button" title="Close (stay logged in)" style="padding:6px 12px;border-radius:8px;border:1px solid #c9a96e;background:#fff8ef;cursor:pointer;font-weight:bold">✕ Close (stay logged in)</button>
+    </div>
     <div id="admin-tabs">
       <button class="a-tab active" data-tab="pending">Pending <span class="badge-count" id="pending-cnt"></span></button>
       <button class="a-tab" data-tab="approved">Approved</button>
@@ -1404,6 +1407,7 @@ document.getElementById('report-target-info').textContent=`Target: ${selNode.dat
     document.getElementById('admin-overlay').classList.add('show');
   });
   document.getElementById('admin-cancel').addEventListener('click',()=>document.getElementById('admin-overlay').classList.remove('show'));
+  document.getElementById('admin-close').addEventListener('click',()=>document.getElementById('admin-overlay').classList.remove('show'));
   document.getElementById('pwd-submit').addEventListener('click',async()=>{
     const v=document.getElementById('pwd-input').value;
     const errEl=document.getElementById('pwd-err');
@@ -1413,6 +1417,7 @@ document.getElementById('report-target-info').textContent=`Target: ${selNode.dat
     try{
       await firebaseSignIn(v);
       isAdmin=true;
+      try{const t=document.getElementById('admin-trigger');if(t&&t.firstChild)t.firstChild.textContent='⚙ Admin (logged in)';}catch{}
       document.getElementById('admin-login').style.display='none';
       document.getElementById('admin-dash').style.display='block';
       errEl.style.display='none';
@@ -1425,6 +1430,7 @@ document.getElementById('report-target-info').textContent=`Target: ${selNode.dat
   document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('pwd-submit').click();});
   document.getElementById('admin-logout').addEventListener('click',()=>{
     authToken=null;isAdmin=false;
+    try{const t=document.getElementById('admin-trigger');if(t&&t.firstChild)t.firstChild.textContent='⚙ Admin';}catch{}
     if(_authRefreshTimer)clearTimeout(_authRefreshTimer);
     document.getElementById('admin-overlay').classList.remove('show');
   });
